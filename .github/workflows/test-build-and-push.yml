@@ -45,6 +45,5 @@ jobs:
         with:
           context: .
           push: true
-          tags:
-            - "${{ env.date }},latest"
+          tags: "${{ env.date }},latest"
           labels: ${{ steps.meta.outputs.labels }}
