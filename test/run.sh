@@ -35,6 +35,8 @@ do
   sleep 10
 done
 
+sleep 1
+
 echo "Test: User billy should exist in SSSD container..."
 docker exec test_sssd_1 getent passwd billy
 
