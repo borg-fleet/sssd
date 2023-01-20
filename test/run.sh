@@ -40,7 +40,13 @@ sleep 1
 echo "Test: User billy should exist in SSSD container..."
 docker exec test_sssd_1 getent passwd billy
 
+echo "Test: User billy should have corrent ssh key in SSSD container..."
+docker exec test_sssd_1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
+
 echo "Test: User billy should exist in SSSD client container..."
 docker exec test_sssd-client_1 getent passwd billy
+
+echo "Test: User billy should have corrent ssh key in SSSD client container..."
+docker exec test_sssd-client_1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
 
 echo "TESTS PASSED"

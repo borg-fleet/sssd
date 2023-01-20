@@ -16,7 +16,7 @@ services:
       SSSD_CONF: |
         [sssd]
         config_file_version = 2
-        services = nss, pam
+        services = nss, pam, ssh
         domains = example.org
 
         [domain/example.org]
@@ -28,6 +28,7 @@ services:
         use_fully_qualified_names = false
         ldap_schema = rfc2307
         ldap_search_base = dc=example,dc=org
+        ldap_user_ssh_public_key = sshPublicKey
         ldap_default_bind_dn = cn=admin,dc=example,dc=org
         ldap_default_authtok = admin
   sssd-client:
