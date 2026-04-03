@@ -6,7 +6,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd "${SCRIPT_DIR}"
 
 echo "Starting test setup..."
-docker-compose up -d
+docker compose up -d
 
 
 echo "Wait for LDAP to become online..."
@@ -24,7 +24,7 @@ done
 
 echo "Waiting for SSSD to find LDAP..."
 SECONDS=0
-until docker logs test_sssd_1 2>&1 | grep -q "Marking port 389 of server 'ldap' as 'working'"
+until docker logs test-sssd-1 2>&1 | grep -q "Marking port 389 of server 'ldap' as 'working'"
 do
   if (( SECONDS > 180 ))
   then
@@ -38,15 +38,15 @@ done
 sleep 1
 
 echo "Test: User billy should exist in SSSD container..."
-docker exec test_sssd_1 getent passwd billy
+docker exec test-sssd-1 getent passwd billy
 
 echo "Test: User billy should have corrent ssh key in SSSD container..."
-docker exec test_sssd_1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
+docker exec test-sssd-1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
 
 echo "Test: User billy should exist in SSSD client container..."
-docker exec test_sssd-client_1 getent passwd billy
+docker exec test-sssd-client-1 getent passwd billy
 
 echo "Test: User billy should have corrent ssh key in SSSD client container..."
-docker exec test_sssd-client_1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
+docker exec test-sssd-client-1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
 
 echo "TESTS PASSED"
