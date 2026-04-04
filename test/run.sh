@@ -5,6 +5,12 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 cd "${SCRIPT_DIR}"
 
+cleanup() {
+  echo "Cleaning up..."
+  docker compose down -v 2>/dev/null || true
+}
+trap cleanup EXIT
+
 echo "Starting test setup..."
 docker compose up -d
 
@@ -40,13 +46,13 @@ sleep 1
 echo "Test: User billy should exist in SSSD container..."
 docker exec test-sssd-1 getent passwd billy
 
-echo "Test: User billy should have corrent ssh key in SSSD container..."
+echo "Test: User billy should have correct ssh key in SSSD container..."
 docker exec test-sssd-1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
 
 echo "Test: User billy should exist in SSSD client container..."
 docker exec test-sssd-client-1 getent passwd billy
 
-echo "Test: User billy should have corrent ssh key in SSSD client container..."
+echo "Test: User billy should have correct ssh key in SSSD client container..."
 docker exec test-sssd-client-1 /usr/bin/sss_ssh_authorizedkeys billy | grep -q 'ssh-rsa ABC'
 
 echo "TESTS PASSED"
